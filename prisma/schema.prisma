@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  role      Role     @default(CUSTOMER)
+  isBlocked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("VendorProducts")
+  orders   Order[]   @relation("CustomerOrders")
+
+  @@index([role])
+  @@index([email])
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  vendorId    Int
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  category    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vendor      User        @relation("VendorProducts", fields: [vendorId], references: [id])
+  orderItems  OrderItem[]
+
+  @@index([vendorId])
+  @@index([isActive])
+  @@index([category])
+  @@index([name])
+  @@index([category, isActive])
+}
+
+
+
+enum OrderStatus {
+  PENDING
+  PARTIALLY_APPROVED
+  APPROVED
+  REJECTED
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  customerId  Int
+  totalAmount Float
+  orderStatus OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  customer User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  items    OrderItem[]
+
+  @@index([customerId])
+  @@index([orderStatus])
+  @@index([createdAt])
+  @@index([customerId, createdAt])
+}
+
+enum OrderItemStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model OrderItem {
+  id           Int             @id @default(autoincrement())
+  orderId      Int
+  productId    Int
+  vendorId     Int
+  quantity     Int
+  priceAtOrder Float
+  status       OrderItemStatus @default(PENDING)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([vendorId])
+  @@index([productId])
+  @@index([vendorId, status])
+}

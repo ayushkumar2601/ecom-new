@@ -1,0 +1,195 @@
+{
+  "info": {
+    "name": "E-Commerce CMS - Phase 3",
+    "description": "Postman Collection for E-Commerce Order Management Backend including Phase 3 Health and Metrics endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & Metrics",
+      "item": [
+        {
+          "name": "Get Health Status",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/v1/health"
+          }
+        },
+        {
+          "name": "Get API Metrics",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/v1/metrics"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "http://localhost:3000/api/v1/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "users"]},
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"role\": \"CUSTOMER\"\n}" }
+          }
+        },
+        {
+          "name": "List Users",
+          "request": { "method": "GET", "url": {"raw": "http://localhost:3000/api/v1/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "users"]} }
+        },
+        {
+          "name": "Get User",
+          "request": { "method": "GET", "url": {"raw": "http://localhost:3000/api/v1/users/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "users", "1"]} }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "x-user-id", "value": "2"},
+              {"key": "x-role", "value": "VENDOR"}
+            ],
+            "url": {"raw": "http://localhost:3000/api/v1/products", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "products"]},
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Product\",\n  \"description\": \"A great product\",\n  \"price\": 99.99,\n  \"stock\": 10,\n  \"category\": \"Electronics\",\n  \"vendorId\": 2\n}" }
+          }
+        },
+        {
+          "name": "List Products",
+          "request": { "method": "GET", "url": {"raw": "http://localhost:3000/api/v1/products", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "products"]} }
+        },
+        {
+          "name": "Get Product (Cached)",
+          "request": { "method": "GET", "url": {"raw": "http://localhost:3000/api/v1/products/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "products", "1"]} }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [ {"key": "Content-Type", "value": "application/json"}, {"key": "x-user-id", "value": "2"} ],
+            "url": {"raw": "http://localhost:3000/api/v1/products/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "products", "1"]},
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 89.99\n}" }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "x-user-id", "value": "2"}],
+            "url": {"raw": "http://localhost:3000/api/v1/products/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "products", "1"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart (Redis)",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": { "method": "GET", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/cart", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "cart"]} }
+        },
+        {
+          "name": "Add Item",
+          "request": {
+            "method": "POST",
+            "header": [ {"key": "Content-Type", "value": "application/json"}, {"key": "x-user-id", "value": "1"} ],
+            "url": {"raw": "http://localhost:3000/api/v1/cart/items", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "cart", "items"]},
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}" }
+          }
+        },
+        {
+          "name": "Update Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [ {"key": "Content-Type", "value": "application/json"}, {"key": "x-user-id", "value": "1"} ],
+            "url": {"raw": "http://localhost:3000/api/v1/cart/items/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "cart", "items", "1"]},
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 5\n}" }
+          }
+        },
+        {
+          "name": "Remove Item",
+          "request": { "method": "DELETE", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/cart/items/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "cart", "items", "1"]} }
+        },
+        {
+          "name": "Clear Cart",
+          "request": { "method": "DELETE", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/cart", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "cart"]} }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": { "method": "POST", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/orders", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders"]} }
+        },
+        {
+          "name": "Get My Orders",
+          "request": { "method": "GET", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/orders", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders"]} }
+        },
+        {
+          "name": "Get Order",
+          "request": { "method": "GET", "header": [{"key": "x-user-id", "value": "1"}], "url": {"raw": "http://localhost:3000/api/v1/orders/1", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders", "1"]} }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List Users",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "users"]} }
+        },
+        {
+          "name": "Block User",
+          "request": { "method": "PATCH", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/users/1/block", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "users", "1", "block"]} }
+        },
+        {
+          "name": "Unblock User",
+          "request": { "method": "PATCH", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/users/1/unblock", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "users", "1", "unblock"]} }
+        },
+        {
+          "name": "Overview Analytics",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/analytics/overview", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "analytics", "overview"]} }
+        },
+        {
+          "name": "Vendor Analytics",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/analytics/vendors/2", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "analytics", "vendors", "2"]} }
+        },
+        {
+          "name": "Repeat Customers",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "ADMIN"}], "url": {"raw": "http://localhost:3000/api/v1/admin/analytics/repeat-customers?threshold=2", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "admin", "analytics", "repeat-customers"]} }
+        }
+      ]
+    },
+    {
+      "name": "Vendor",
+      "item": [
+        {
+          "name": "Incoming Orders",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "VENDOR"}, {"key": "x-user-id", "value": "2"}], "url": {"raw": "http://localhost:3000/api/v1/orders/vendor/incoming", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders", "vendor", "incoming"]} }
+        },
+        {
+          "name": "Approve Order Item",
+          "request": { "method": "PATCH", "header": [{"key": "x-role", "value": "VENDOR"}, {"key": "x-user-id", "value": "2"}], "url": {"raw": "http://localhost:3000/api/v1/orders/1/items/1/approve", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders", "1", "items", "1", "approve"]} }
+        },
+        {
+          "name": "Reject Order Item",
+          "request": { "method": "PATCH", "header": [{"key": "x-role", "value": "VENDOR"}, {"key": "x-user-id", "value": "2"}], "url": {"raw": "http://localhost:3000/api/v1/orders/1/items/1/reject", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "orders", "1", "items", "1", "reject"]} }
+        },
+        {
+          "name": "Performance Analytics",
+          "request": { "method": "GET", "header": [{"key": "x-role", "value": "VENDOR"}, {"key": "x-user-id", "value": "2"}], "url": {"raw": "http://localhost:3000/api/v1/vendor/analytics/performance", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "v1", "vendor", "analytics", "performance"]} }
+        }
+      ]
+    }
+  ]
+}

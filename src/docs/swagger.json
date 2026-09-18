@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-Commerce API",
+    "version": "1.0.0",
+    "description": "API Documentation for E-Commerce Order Management Backend Phase 3"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "UserIdHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-user-id"
+      },
+      "RoleHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-role"
+      }
+    }
+  },
+  "security": [
+    {
+      "UserIdHeader": [],
+      "RoleHeader": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "responses": {
+          "200": { "description": "Healthy" }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "API Metrics",
+        "responses": {
+          "200": { "description": "Metrics data" }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "List Users",
+        "responses": { "200": { "description": "Users array" } }
+      },
+      "post": {
+        "summary": "Create User",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "role": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "User created" } }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List Products",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Products array" } }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "List Orders",
+        "responses": { "200": { "description": "Orders array" } }
+      },
+      "post": {
+        "summary": "Create Order from Cart",
+        "responses": { "201": { "description": "Order created" } }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "Get Cart",
+        "responses": { "200": { "description": "Cart object" } }
+      }
+    }
+  }
+}
